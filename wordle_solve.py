@@ -129,20 +129,20 @@ class WordleGrid:
         for letter in guess:
             guess_str.join(letter)
 
-        if not guess_str in self.WORDS:
+        if guess_str not in self.WORDS:
             return False, False
 
 
         #Check if each letter is in the correct word
-        for i in range(len(guess)):
-            for j in range(len(guess)):
-                if guess[i] == self.correct_word[j]:
-                    self.matrix[self.guesses][i] = (guess[i], True, False)
+        for i, letter in enumerate(guess):
+            for j, correct_letter in enumerate(self.correct_word):
+                if letter == correct_letter:
+                    self.matrix[self.guesses][i] = (letter, True, False)
                     if i == j:
-                        self.matrix[self.guesses][j] = (guess[i], True, True)
+                        self.matrix[self.guesses][j] = (letter, True, True)
                     break
                 else:
-                    self.matrix[self.guesses][i] = (guess[i], False, False)
+                    self.matrix[self.guesses][i] = (letter, False, False)
 
         self.guesses += 1
         #Check if the guess is correct
@@ -153,7 +153,7 @@ class WordleGrid:
 
 
 
-class game_screen():
+class GameScreen():
     #initialize the game screen
     #@param self
     #@param screen: the pygame screen
@@ -249,8 +249,10 @@ class game_screen():
                             self.grid_height/len(grid.matrix)/2-30))
                 else:
                     self.screen.blit(font.render("_", True, self.font_color), \
-                        (self.grid_start[0]+j*self.grid_width/len(grid.matrix)+self.grid_width/len(grid.matrix)/2-30, \
-                        self.grid_start[1]+i*self.grid_height/len(grid.matrix)+self.grid_height/len(grid.matrix)/2-30))
+                        (self.grid_start[0]+j*self.grid_width/len(grid.matrix)+\
+                            self.grid_width/len(grid.matrix)/2-30, \
+                        self.grid_start[1]+i*self.grid_height/len(grid.matrix)+\
+                            self.grid_height/len(grid.matrix)/2-30))
         #Flip the screen
         pygame.display.flip()
 
@@ -264,7 +266,7 @@ if __name__ == "__main__":
     font = pygame.font.Font("freesansbold.ttf", 32)
 
     #Initialize the game screen
-    game_screen = game_screen(screen, 800, 800, font, 32, (255, 255, 255), (0, 0, 0))
+    GameScreen = GameScreen(screen, 800, 800, font, 32, (255, 255, 255), (0, 0, 0))
 
     #Initialize the grid
     grid = WordleGrid("water", (5,5))
@@ -286,7 +288,7 @@ if __name__ == "__main__":
                     guess.pop()
                     for i in range(len(grid.matrix[1])):
                         grid.matrix[grid.guesses][i] = ("_", False, False)
-                    game_screen.draw(grid, guess)
+                    GameScreen.draw(grid, guess)
                 elif event.key == pygame.K_RETURN:
                     print(guess, grid.correct_word)
                     if len(guess) == len(grid.correct_word):
@@ -300,7 +302,7 @@ if __name__ == "__main__":
                             #Replace the last letter with
                             for i in range(len(grid.matrix[1])):
                                 grid.matrix[grid.guesses][i] = ("_", False, False)
-                            game_screen.draw(grid, guess)
+                            GameScreen.draw(grid, guess)
                             #Display message that the guess is not a word
                             screen.blit(font.render("Not a word", True, (255, 0, 0)), (0, 0))
                             pygame.display.flip()
@@ -326,6 +328,6 @@ if __name__ == "__main__":
                         continue
                     guess.append(chr(event.key))
                     #Draw the game screen
-                    game_screen.draw(grid, guess)            
+                    GameScreen.draw(grid, guess)      
         #Draw the game screen
-        game_screen.draw(grid, guess)
+        GameScreen.draw(grid, guess)
