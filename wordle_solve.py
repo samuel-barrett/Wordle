@@ -1,7 +1,13 @@
-#Wordle solver
+"""
+Wordle solver
+"""
+import enum
 import pygame
 
-class wordle_grid:
+class wordleGrid:
+    """
+    Draw the wordle
+    """
     WORDS = [
         "about", "above", "abuse", "actor", "acute", "admit",
         "adopt", "adult", "after", "again", "agent", "agree",
@@ -158,6 +164,9 @@ class game_screen():
     #@param font_color: the color of the font
     #@param background_color: the color of the background
     def __init__(self, screen, width, height, font, font_size, font_color, background_color):
+        """
+        Initialize the game screen
+        """
         self.screen = screen
         self.width = width
         self.height = height
@@ -166,15 +175,17 @@ class game_screen():
         self.font_color = font_color
         self.background_color = background_color
         self.screen.fill(self.background_color)
-    
+
     #Draw the game screen
     #@param self
     #@param grid: the grid to draw
     def draw(self, grid, current_guess_letters):
-        #Draw the grid as a grid of letters in squares
-        #If the letter is in the word, draw it orange
-        #If the letter is in the word, and in the correct position, draw it green
-        #If the letter is not in the word, draw it grey
+        """
+        Draw the grid as a grid of letters in squares
+        If the letter is in the word, draw it orange
+        If the letter is in the word, and in the correct position, draw it green
+        If the letter is not in the word, draw it grey
+        """
 
 
         orange = (255, 165, 0)
@@ -198,40 +209,48 @@ class game_screen():
         self.grid_start = (0.1*self.width, 0.1*self.height)
 
         #Add current guess to the grid
-        for i in range(len(current_guess_letters)):
-            grid.matrix[grid.guesses][i] = (current_guess_letters[i], False, False)
+        for i, letter in enumerate(current_guess_letters):
+            grid.matrix[grid.guesses][i] = (letter, False, False)
 
         #Draw a bunch of boxes with correct colours
-        for i in range(len(grid.matrix)):
-            for j in range(len(grid.matrix[i])):
-                if grid.matrix[i][j][1]:
-                    if grid.matrix[i][j][2]:
-                        self.screen.fill(green, rect=[self.grid_start[0]+j*self.grid_width/len(grid.matrix), \
-                            self.grid_start[1]+i*self.grid_height/len(grid.matrix[i]), self.grid_width/len(grid.matrix), self.grid_height/len(grid.matrix[i])])
+        for i, row in enumerate(grid.matrix):
+            for j, cell in enumerate(row):
+                if cell[1]:
+                    if cell[2]:
+                        self.screen.fill(green, \
+                            rect=[self.grid_start[0]+j*self.grid_width/len(grid.matrix), \
+                                self.grid_start[1]+i*self.grid_height/len(grid.matrix[i]), \
+                                self.grid_width/len(grid.matrix), \
+                                self.grid_height/len(grid.matrix[i])])
                     else:
-                        self.screen.fill(orange, rect=[self.grid_start[0]+j*self.grid_width/len(grid.matrix), \
-                            self.grid_start[1]+i*self.grid_height/len(grid.matrix[i]), self.grid_width/len(grid.matrix), self.grid_height/len(grid.matrix[i])])
+                        self.screen.fill(orange, 
+                            rect=[self.grid_start[0]+j*self.grid_width/len(grid.matrix), \
+                                self.grid_start[1]+i*self.grid_height/len(grid.matrix[i]), \
+                                self.grid_width/len(grid.matrix), \
+                                self.grid_height/len(grid.matrix[i])])
                 else:
-                    self.screen.fill(grey, rect=[self.grid_start[0]+j*self.grid_width/len(grid.matrix), self.grid_start[1]+i*self.grid_height/len(grid.matrix[i]), \
-                        self.grid_width/len(grid.matrix), self.grid_height/len(grid.matrix[i])])
+                    self.screen.fill(grey, 
+                        rect=[self.grid_start[0]+j*self.grid_width/len(grid.matrix), \
+                            self.grid_start[1]+i*self.grid_height/len(grid.matrix[i]), \
+                            self.grid_width/len(grid.matrix), \
+                            self.grid_height/len(grid.matrix[i])])
         
         #Populate the grid with the letters cenetered in the rectangles
         #Use 60 size font 
         font = pygame.font.Font("freesansbold.ttf", 60)
-        for i in range(len(grid.matrix)):
-            for j in range(len(grid.matrix[i])):
-                if grid.matrix[i][j][0] != None:
-                    self.screen.blit(font.render(grid.matrix[i][j][0], True, self.font_color), (self.grid_start[0]+j*self.grid_width/len(grid.matrix)+self.grid_width/len(grid.matrix)/2-30, \
+        for i, row in enumerate(grid.matrix):
+            for j, cell in enumerate(grid.matrix[i]):
+                if cell[0] != None:
+                    self.screen.blit(
+                        font.render(grid.matrix[i][j][0], True, self.font_color), \
+                        (self.grid_start[0]+j*self.grid_width/len(grid.matrix)+self.grid_width/len(grid.matrix)/2-30, \
                         self.grid_start[1]+i*self.grid_height/len(grid.matrix)+self.grid_height/len(grid.matrix)/2-30))
                 else:
-                    self.screen.blit(font.render("_", True, self.font_color), (self.grid_start[0]+j*self.grid_width/len(grid.matrix)+self.grid_width/len(grid.matrix)/2-30, \
+                    self.screen.blit(font.render("_", True, self.font_color), \
+                        (self.grid_start[0]+j*self.grid_width/len(grid.matrix)+self.grid_width/len(grid.matrix)/2-30, \
                         self.grid_start[1]+i*self.grid_height/len(grid.matrix)+self.grid_height/len(grid.matrix)/2-30))
-
-
         #Flip the screen
         pygame.display.flip()
-
-
 
 if __name__ == "__main__":
     #Initialize the pygame screen
@@ -246,17 +265,17 @@ if __name__ == "__main__":
     game_screen = game_screen(screen, 800, 800, font, 32, (255, 255, 255), (0, 0, 0))
 
     #Initialize the grid
-    grid = wordle_grid("water", (5,5))
+    grid = wordleGrid("water", (5,5))
 
     #Initialize the game loop
-    game_over = False
+    GAME_OVER = False
 
     #Check for events
     guess = []
-    while not game_over:
+    while not GAME_OVER:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                game_over = True
+                GAME_OVER = True
             elif event.type == pygame.KEYDOWN:
                 #If the user presses a key, check if it is a letter
                 #If it is a letter, add it to the word
@@ -272,7 +291,7 @@ if __name__ == "__main__":
                         print("was here")
                         is_word, correct_guess = grid.enter_guess(guess)
                         if correct_guess:
-                            game_over = True
+                            GAME_OVER = True
                             break
                         if not is_word:
                             guess = []
@@ -299,7 +318,7 @@ if __name__ == "__main__":
                         pygame.time.delay(1000)
                         guess = []
                 elif event.key == pygame.K_ESCAPE:
-                    game_over = True
+                    GAME_OVER = True
                 #If the key is a letter, add it to the word
                 elif event.key >= pygame.K_a and event.key <= pygame.K_z:
                     if len(guess) == len(grid.correct_word):
