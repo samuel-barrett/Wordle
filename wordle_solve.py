@@ -116,11 +116,15 @@ class WordleGrid:
 
         self.guesses = 0
 
-    #Enter a guess for the wordle
-    #@param self
-    #@param guess: the guess to enter
-    #@return: True if the guess is "correct",False if it is incorrect
+
     def enter_guess(self, guess):
+        """
+        Enter a guess for the wordle
+        @param: self
+        @param: guess: the guess to enter
+        @return: True if the guess is "correct",False if it is incorrect
+        """
+
         #Enter the guess into the matrix
         #If the word is in the word list, add it to the matrix
 
@@ -132,17 +136,15 @@ class WordleGrid:
         if guess_str not in self.WORDS:
             return False, False
 
-
         #Check if each letter is in the correct word
         for i, letter in enumerate(guess):
+            self.matrix[self.guesses][i] = (letter, False, False)
             for j, correct_letter in enumerate(self.correct_word):
                 if letter == correct_letter:
                     self.matrix[self.guesses][i] = (letter, True, False)
                     if i == j:
                         self.matrix[self.guesses][j] = (letter, True, True)
-                    break
-                else:
-                    self.matrix[self.guesses][i] = (letter, False, False)
+                    
 
         self.guesses += 1
         #Check if the guess is correct
@@ -175,6 +177,10 @@ class GameScreen():
         self.font_color = font_color
         self.background_color = background_color
         self.screen.fill(self.background_color)
+        self.grid_width = width * 0.8
+        self.grid_height = height * 0.8
+        #Grid should have a border of 10% of the screen
+        self.grid_start = (0.1*self.width, 0.1*self.height) 
 
     #Draw the game screen
     #@param self
@@ -201,12 +207,6 @@ class GameScreen():
         title_text_rect = title_text.get_rect()
         title_text_rect.center = (self.width // 2, 40)
         self.screen.blit(title_text, title_text_rect)
-
-        self.grid_width = 0.80*self.width
-        self.grid_height = 0.80*self.height
-
-        #Grid should have a border of 10% of the screen
-        self.grid_start = (0.1*self.width, 0.1*self.height)
 
         #Add current guess to the grid
         for i, letter in enumerate(current_guess_letters):
@@ -316,7 +316,8 @@ if __name__ == "__main__":
                             guess = []
                     else:
                         print("Word must be 5 letters")
-                        screen.blit(font.render("Word must be 5 letters", True, (255, 0, 0)), (0, 0))
+                        screen.blit(font.render("Word must be 5 letters", \
+                            True, (255, 0, 0)), (0, 0))
                         pygame.display.flip()
                         pygame.time.delay(1000)
                         guess = []
@@ -328,6 +329,6 @@ if __name__ == "__main__":
                         continue
                     guess.append(chr(event.key))
                     #Draw the game screen
-                    GameScreen.draw(grid, guess)      
+                    GameScreen.draw(grid, guess)   
         #Draw the game screen
         GameScreen.draw(grid, guess)
