@@ -107,7 +107,7 @@ class wordle_grid:
         self.correct_word = []
         for letter in word:
             self.correct_word.append(letter)
-        
+
         self.guesses = 0
 
     #Enter a guess for the wordle
@@ -121,7 +121,7 @@ class wordle_grid:
         #If the word is in the word list, add it to the matrix
         guess_str = ""
         for letter in guess:
-            guess_str += letter
+            guess_str.join(letter)
 
         if not guess_str in self.WORDS:
             return False, False
@@ -206,11 +206,14 @@ class game_screen():
             for j in range(len(grid.matrix[i])):
                 if grid.matrix[i][j][1]:
                     if grid.matrix[i][j][2]:
-                        self.screen.fill(green, rect=[self.grid_start[0]+j*self.grid_width/len(grid.matrix), self.grid_start[1]+i*self.grid_height/len(grid.matrix[i]), self.grid_width/len(grid.matrix), self.grid_height/len(grid.matrix[i])])
+                        self.screen.fill(green, rect=[self.grid_start[0]+j*self.grid_width/len(grid.matrix), \
+                            self.grid_start[1]+i*self.grid_height/len(grid.matrix[i]), self.grid_width/len(grid.matrix), self.grid_height/len(grid.matrix[i])])
                     else:
-                        self.screen.fill(orange, rect=[self.grid_start[0]+j*self.grid_width/len(grid.matrix), self.grid_start[1]+i*self.grid_height/len(grid.matrix[i]), self.grid_width/len(grid.matrix), self.grid_height/len(grid.matrix[i])])
+                        self.screen.fill(orange, rect=[self.grid_start[0]+j*self.grid_width/len(grid.matrix), \
+                            self.grid_start[1]+i*self.grid_height/len(grid.matrix[i]), self.grid_width/len(grid.matrix), self.grid_height/len(grid.matrix[i])])
                 else:
-                    self.screen.fill(grey, rect=[self.grid_start[0]+j*self.grid_width/len(grid.matrix), self.grid_start[1]+i*self.grid_height/len(grid.matrix[i]), self.grid_width/len(grid.matrix), self.grid_height/len(grid.matrix[i])])
+                    self.screen.fill(grey, rect=[self.grid_start[0]+j*self.grid_width/len(grid.matrix), self.grid_start[1]+i*self.grid_height/len(grid.matrix[i]), \
+                        self.grid_width/len(grid.matrix), self.grid_height/len(grid.matrix[i])])
         
         #Populate the grid with the letters cenetered in the rectangles
         #Use 60 size font 
@@ -218,11 +221,13 @@ class game_screen():
         for i in range(len(grid.matrix)):
             for j in range(len(grid.matrix[i])):
                 if grid.matrix[i][j][0] != None:
-                    self.screen.blit(font.render(grid.matrix[i][j][0], True, self.font_color), (self.grid_start[0]+j*self.grid_width/len(grid.matrix)+self.grid_width/len(grid.matrix)/2-30, self.grid_start[1]+i*self.grid_height/len(grid.matrix)+self.grid_height/len(grid.matrix)/2-30))
+                    self.screen.blit(font.render(grid.matrix[i][j][0], True, self.font_color), (self.grid_start[0]+j*self.grid_width/len(grid.matrix)+self.grid_width/len(grid.matrix)/2-30, \
+                        self.grid_start[1]+i*self.grid_height/len(grid.matrix)+self.grid_height/len(grid.matrix)/2-30))
                 else:
-                    self.screen.blit(font.render("_", True, self.font_color), (self.grid_start[0]+j*self.grid_width/len(grid.matrix)+self.grid_width/len(grid.matrix)/2-30, self.grid_start[1]+i*self.grid_height/len(grid.matrix)+self.grid_height/len(grid.matrix)/2-30))
+                    self.screen.blit(font.render("_", True, self.font_color), (self.grid_start[0]+j*self.grid_width/len(grid.matrix)+self.grid_width/len(grid.matrix)/2-30, \
+                        self.grid_start[1]+i*self.grid_height/len(grid.matrix)+self.grid_height/len(grid.matrix)/2-30))
 
-        
+
         #Flip the screen
         pygame.display.flip()
 
@@ -301,11 +306,7 @@ if __name__ == "__main__":
                         continue
                     guess.append(chr(event.key))
                     #Draw the game screen
-                    game_screen.draw(grid, guess)
-
-                    
-
-            
+                    game_screen.draw(grid, guess)            
         #Draw the game screen
         game_screen.draw(grid, guess)
 
