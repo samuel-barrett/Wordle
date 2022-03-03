@@ -105,9 +105,7 @@ class WordleGrid:
         #And a boolean to indicate if the letter is in the word and in the correct position
         self.matrix = []
         for i in range(grid_dimensions[0]):
-            self.matrix.append([])
-            for j in range(grid_dimensions[1]):
-                self.matrix[i].append((None, False, False))
+            self.matrix.append([(None, False, False)*grid_dimensions[1]])
 
         self.correct_word = []
         for letter in word:
@@ -142,19 +140,20 @@ class WordleGrid:
                 if letter == correct_letter:
                     self.matrix[self.guesses][i] = (letter, True, False)
                     if i == j:
-                        self.matrix[self.guesses][j] = (letter, True, True)
-                    
+                        self.matrix[self.guesses][j] = (letter, True, True)                    
 
         self.guesses += 1
         #Check if the guess is correct
         if guess == self.correct_word:
             return True, True
-        else:
-            return True, False
+        return True, False
 
 
 
 class GameScreen():
+    """
+    The game screen
+    """
     def __init__(self, screen, width, height, font):
         """
         Initialize the game screen
@@ -173,7 +172,7 @@ class GameScreen():
         self.grid_width = width * 0.8
         self.grid_height = height * 0.8
         #Grid should have a border of 10% of the screen
-        self.grid_start = (0.1*self.width, 0.1*self.height) 
+        self.grid_start = (0.1*self.width, 0.1*self.height)
 
     def draw(self, grid, current_guess_letters):
         """
@@ -232,7 +231,7 @@ class GameScreen():
         font = pygame.font.Font("freesansbold.ttf", 60)
         for i, row in enumerate(grid.matrix):
             for j, cell in enumerate(grid.matrix[i]):
-                if cell[0] != None:
+                if cell[0] is not None:
                     self.screen.blit(
                         font.render(grid.matrix[i][j][0], True, "white"), \
                         (self.grid_start[0]+j*self.grid_width/len(grid.matrix)+\
