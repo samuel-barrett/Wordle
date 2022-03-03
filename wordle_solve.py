@@ -269,14 +269,14 @@ def main():
     grid = WordleGrid("water", (5,5))
 
     #Initialize the game loop
-    GAME_OVER = False
+    game_over = False
 
     #Check for events
     guess = []
-    while not GAME_OVER:
+    while not game_over:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                GAME_OVER = True
+                game_over = True
             elif event.type == pygame.KEYDOWN:
                 #If the user presses a key, check if it is a letter
                 #If it is a letter, add it to the word
@@ -292,7 +292,7 @@ def main():
                         print("was here")
                         is_word, correct_guess = grid.enter_guess(guess)
                         if correct_guess:
-                            GAME_OVER = True
+                            game_over = True
                             break
                         if not is_word:
                             guess = []
@@ -319,7 +319,7 @@ def main():
                         pygame.time.delay(1000)
                         guess = []
                 elif event.key == pygame.K_ESCAPE:
-                    GAME_OVER = True
+                    game_over = True
                 #If the key is a letter, add it to the word
                 elif event.key >= pygame.K_a and event.key <= pygame.K_z:
                     if len(guess) == len(grid.correct_word):

@@ -19,6 +19,9 @@ jobs:
         python -m pip install --upgrade pip
         python -m pip install pygame
         pip install pylint
+    - name: Configure pylint #unsafe-load-any-extensions=yes in .pylintrc
+      run: |
+        echo "unsafe-load-any-extensions=yes" >> .pylintrc
     - name: Analysing the code with pylint
       run: |
         pylint $(git ls-files '*.py')
