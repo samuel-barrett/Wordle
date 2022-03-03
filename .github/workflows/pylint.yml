@@ -21,6 +21,7 @@ jobs:
         pip install pylint
     - name: Configure pylint #unsafe-load-any-extensions=yes in .pylintrc
       run: |
+        cat > .pylintrc <<EOF
         echo "unsafe-load-any-extensions=yes" >> .pylintrc
     - name: Analysing the code with pylint
       run: |
