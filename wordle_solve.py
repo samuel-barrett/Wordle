@@ -2,6 +2,7 @@
 Wordle solver
 """
 import pygame
+import numpy as np
 
 class WordleGrid:
     """
@@ -103,12 +104,14 @@ class WordleGrid:
         #Create a matrix of values to put in the grid
         #Each value contains a "lette",a boolean to indicate if the letter is in the word
         #And a boolean to indicate if the letter is in the word and in the correct position
-        self.matrix = []
-        self.matrix.append([(None, False, False)*grid_dimensions[1]]*grid_dimensions[0])
+        self.matrix = np.zeros((grid_dimensions[0], grid_dimensions[1]), dtype=tuple)
+        for i in range(grid_dimensions[0]):
+            for j in range(grid_dimensions[1]):
+                self.matrix[i][j] = (None, False, False)
 
-        self.correct_word = []
-        for letter in word:
-            self.correct_word.append(letter)
+        self.correct_word = np.zeros(len(word), dtype=str)
+        for i, letter in enumerate(word):
+            self.correct_word[i] = letter
 
         self.guesses = 0
 
