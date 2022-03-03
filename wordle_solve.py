@@ -156,7 +156,7 @@ class GameScreen():
     """
     The game screen
     """
-    def __init__(self, screen, width, height, font):
+    def __init__(self, screen, font):
         """
         Initialize the game screen
         @param self
@@ -166,8 +166,8 @@ class GameScreen():
         @param font: the font to use
         """
         self.screen = screen
-        self.width = width
-        self.height = height
+        self.width = screen.get_width()
+        self.height = screen.get_height()
         self.font = font
         self.background_color = "black"
         self.screen.fill(self.background_color)
@@ -351,7 +351,7 @@ def main():
     font = pygame.font.Font("freesansbold.ttf", 60)
 
     #Initialize the game screen
-    game_screen = GameScreen(screen, 800, 800, font)
+    game_screen = GameScreen(screen, font)
 
     #Initialize the grid
     grid = WordleGrid("water", (5,5))
