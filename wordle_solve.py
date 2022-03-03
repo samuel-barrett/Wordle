@@ -104,8 +104,7 @@ class WordleGrid:
         #Each value contains a "lette",a boolean to indicate if the letter is in the word
         #And a boolean to indicate if the letter is in the word and in the correct position
         self.matrix = []
-        for i in range(grid_dimensions[0]):
-            self.matrix.append([(None, False, False)*grid_dimensions[1]])
+        self.matrix.append([(None, False, False)*grid_dimensions[1]]*grid_dimensions[0])
 
         self.correct_word = []
         for letter in word:
@@ -140,7 +139,7 @@ class WordleGrid:
                 if letter == correct_letter:
                     self.matrix[self.guesses][i] = (letter, True, False)
                     if i == j:
-                        self.matrix[self.guesses][j] = (letter, True, True)                    
+                        self.matrix[self.guesses][j] = (letter, True, True)           
 
         self.guesses += 1
         #Check if the guess is correct
@@ -329,6 +328,17 @@ def handle_keydown(event, screen, grid, game_screen, guess, font):
 
 
 def main():
+    """
+    @description:
+        - Initialize the pygame screen
+        - Initialize the grid
+        - Initialize the game screen
+        - Initialize the font
+        - Initialize the guess
+        - Initialize the game loop
+        - Handle the key presses
+        - If the game loop is over, end the game
+    """
     #Initialize the pygame screen
     pygame.init()
     screen = pygame.display.set_mode((800, 800))
