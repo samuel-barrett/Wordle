@@ -22,9 +22,7 @@ jobs:
     - name: Configure pylint #unsafe-load-any-extensions=yes in .pylintrc
       #Replace instance of unsafe-load-any-extension=no with unsafe-load-any-extension=yes
       run: |
-        
-        sed -i 's/unsafe-load-any-extension=no/unsafe-load-any-extension=yes/g' .pylintrc
-        
+        echo "extension-pkg-whitelist=pygame" >> ~/.pylintrc
     - name: Analysing the code with pylint
       run: |
         pylint $(git ls-files '*.py')
