@@ -155,7 +155,7 @@ class WordleGrid:
 
 
 class GameScreen():
-    def __init__(self, screen, width, height, font, font_size, font_color, background_color):
+    def __init__(self, screen, width, height, font):
         """
         Initialize the game screen
         @param self
@@ -163,17 +163,12 @@ class GameScreen():
         @param width: the width of the screen
         @param height: the height of the screen
         @param font: the font to use
-        @param font_size: the size of the font
-        @param font_color: the color of the font
-        @param background_color: the color of the background
         """
         self.screen = screen
         self.width = width
         self.height = height
         self.font = font
-        self.font_size = font_size
-        self.font_color = font_color
-        self.background_color = background_color
+        self.background_color = "black"
         self.screen.fill(self.background_color)
         self.grid_width = width * 0.8
         self.grid_height = height * 0.8
@@ -200,7 +195,7 @@ class GameScreen():
 
         #Draw a title "Wordle"
         title_font = pygame.font.Font("freesansbold.ttf", 64)
-        title_text = title_font.render("Wordle", True, self.font_color)
+        title_text = title_font.render("Wordle", True, "white")
         title_text_rect = title_text.get_rect()
         title_text_rect.center = (self.width // 2, 40)
         self.screen.blit(title_text, title_text_rect)
@@ -239,13 +234,13 @@ class GameScreen():
             for j, cell in enumerate(grid.matrix[i]):
                 if cell[0] != None:
                     self.screen.blit(
-                        font.render(grid.matrix[i][j][0], True, self.font_color), \
+                        font.render(grid.matrix[i][j][0], True, "white"), \
                         (self.grid_start[0]+j*self.grid_width/len(grid.matrix)+\
                             self.grid_width/len(grid.matrix)/2-30, \
                         self.grid_start[1]+i*self.grid_height/len(grid.matrix)+\
                             self.grid_height/len(grid.matrix)/2-30))
                 else:
-                    self.screen.blit(font.render("_", True, self.font_color), \
+                    self.screen.blit(font.render("_", True, "white"), \
                         (self.grid_start[0]+j*self.grid_width/len(grid.matrix)+\
                             self.grid_width/len(grid.matrix)/2-30, \
                         self.grid_start[1]+i*self.grid_height/len(grid.matrix)+\
@@ -316,7 +311,8 @@ def handle_keydown(event, screen, grid, game_screen, guess, font):
     #If it is a letter, add it to the word
     if event.key == pygame.K_BACKSPACE:
         #Replace the last letter with _
-        guess.pop()
+        if len(guess) != 0:
+            guess.pop()
         for i in range(len(grid.matrix[1])):
             grid.matrix[grid.guesses][i] = ("_", False, False)
         game_screen.draw(grid, guess)
@@ -340,10 +336,10 @@ def main():
     pygame.display.set_caption("Wordle")
 
     #Initialize the font
-    font = pygame.font.Font("freesansbold.ttf", 32)
+    font = pygame.font.Font("freesansbold.ttf", 60)
 
     #Initialize the game screen
-    game_screen = GameScreen(screen, 800, 800, font, 32, (255, 255, 255), (0, 0, 0))
+    game_screen = GameScreen(screen, 800, 800, font)
 
     #Initialize the grid
     grid = WordleGrid("water", (5,5))
