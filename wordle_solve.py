@@ -263,7 +263,7 @@ def main():
     font = pygame.font.Font("freesansbold.ttf", 32)
 
     #Initialize the game screen
-    GameScreen = GameScreen(screen, 800, 800, font, 32, (255, 255, 255), (0, 0, 0))
+    game_screen = GameScreen(screen, 800, 800, font, 32, (255, 255, 255), (0, 0, 0))
 
     #Initialize the grid
     grid = WordleGrid("water", (5,5))
@@ -285,7 +285,7 @@ def main():
                     guess.pop()
                     for i in range(len(grid.matrix[1])):
                         grid.matrix[grid.guesses][i] = ("_", False, False)
-                    GameScreen.draw(grid, guess)
+                    game_screen.draw(grid, guess)
                 elif event.key == pygame.K_RETURN:
                     print(guess, grid.correct_word)
                     if len(guess) == len(grid.correct_word):
@@ -299,7 +299,7 @@ def main():
                             #Replace the last letter with
                             for i in range(len(grid.matrix[1])):
                                 grid.matrix[grid.guesses][i] = ("_", False, False)
-                            GameScreen.draw(grid, guess)
+                            game_screen.draw(grid, guess)
                             #Display message that the guess is not a word
                             screen.blit(font.render("Not a word", True, (255, 0, 0)), (0, 0))
                             pygame.display.flip()
@@ -326,9 +326,9 @@ def main():
                         continue
                     guess.append(chr(event.key))
                     #Draw the game screen
-                    GameScreen.draw(grid, guess)   
+                    game_screen.draw(grid, guess)   
         #Draw the game screen
-        GameScreen.draw(grid, guess)
+        game_screen.draw(grid, guess)
 
 if __name__ == "__main__":
     main()
