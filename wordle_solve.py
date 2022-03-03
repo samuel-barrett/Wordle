@@ -1,7 +1,6 @@
 """
 Wordle solver
 """
-import enum
 import pygame
 
 class WordleGrid:
@@ -156,18 +155,17 @@ class WordleGrid:
 
 
 class GameScreen():
-    #initialize the game screen
-    #@param self
-    #@param screen: the pygame screen
-    #@param width: the width of the screen
-    #@param height: the height of the screen
-    #@param font: the font to use
-    #@param font_size: the size of the font
-    #@param font_color: the color of the font
-    #@param background_color: the color of the background
     def __init__(self, screen, width, height, font, font_size, font_color, background_color):
         """
         Initialize the game screen
+        @param self
+        @param screen: the pygame screen
+        @param width: the width of the screen
+        @param height: the height of the screen
+        @param font: the font to use
+        @param font_size: the size of the font
+        @param font_color: the color of the font
+        @param background_color: the color of the background
         """
         self.screen = screen
         self.width = width
@@ -182,17 +180,16 @@ class GameScreen():
         #Grid should have a border of 10% of the screen
         self.grid_start = (0.1*self.width, 0.1*self.height) 
 
-    #Draw the game screen
-    #@param self
-    #@param grid: the grid to draw
     def draw(self, grid, current_guess_letters):
         """
+        Draw the game screen
         Draw the grid as a grid of letters in squares
         If the letter is in the word, draw it orange
         If the letter is in the word, and in the correct position, draw it green
         If the letter is not in the word, draw it grey
+        @param self
+        @param grid: the grid to draw
         """
-
 
         orange = (255, 165, 0)
         green = (0, 255, 0)
@@ -256,7 +253,7 @@ class GameScreen():
         #Flip the screen
         pygame.display.flip()
 
-if __name__ == "__main__":
+def main():
     #Initialize the pygame screen
     pygame.init()
     screen = pygame.display.set_mode((800, 800))
@@ -332,3 +329,6 @@ if __name__ == "__main__":
                     GameScreen.draw(grid, guess)   
         #Draw the game screen
         GameScreen.draw(grid, guess)
+
+if __name__ == "__main__":
+    main()
