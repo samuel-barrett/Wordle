@@ -19,10 +19,6 @@ jobs:
         python -m pip install --upgrade pip
         python -m pip install pygame
         pip install pylint
-    - name: Configure pylint #unsafe-load-any-extensions=yes in .pylintrc
-      #Replace instance of unsafe-load-any-extension=no with unsafe-load-any-extension=yes
-      run: |
-        echo "extension-pkg-whitelist=pygame" >> ~/.pylintrc
     - name: Analysing the code with pylint
       run: |
-        pylint $(git ls-files '*.py')
+        pylint $(git ls-files '*.py') --extension-pkg-whitelist=pygame
