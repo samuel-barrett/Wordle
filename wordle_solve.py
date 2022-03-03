@@ -253,6 +253,86 @@ class GameScreen():
         #Flip the screen
         pygame.display.flip()
 
+
+def handle_guess(screen, guess, grid, game_screen, font):
+    """
+    Handle the guess when it is entered
+    @description: Check if the guess is correct. If it is correct, return True.
+    If it is incorrect, clear the screen and redraw the grid, then return False
+    @param screen: the pygame screen
+    @param guess: the guess to handle
+    @param grid: the grid to handle the guess
+    @param game_screen: the game screen to draw
+    @param font: the font to use
+    @return: True if the guess is correct, False otherwise
+    """
+    print(guess, grid.correct_word)
+    if len(guess) == len(grid.correct_word):
+        is_word, correct_guess = grid.enter_guess(guess)
+        if correct_guess:
+            return True
+        if not is_word:
+            guess = []
+            #Replace the last letter with
+            for i in range(len(grid.matrix[1])):
+                grid.matrix[grid.guesses][i] = ("_", False, False)
+            game_screen.draw(grid, guess)
+            #Display message that the guess is not a word
+            screen.blit(font.render("Not a word", True, (255, 0, 0)), (0, 0))
+            pygame.display.flip()
+            pygame.time.delay(1000)
+        else:
+            #Display message that the guess is not correct
+            print("Not correct")
+            screen.blit(font.render("Not correct", True, (255, 0, 0)), (0, 0))
+            pygame.display.flip()
+            pygame.time.delay(1000)
+            guess = []
+    else:
+        print("Word must be 5 letters")
+        screen.blit(font.render("Word must be 5 letters", \
+            True, (255, 0, 0)), (0, 0))
+        pygame.display.flip()
+        pygame.time.delay(1000)
+        guess = []
+    return False
+
+def handle_keydown(event, screen, grid, game_screen, guess, font):
+    """
+    @description:
+        - Handle key presses
+        - If the key is a letter, add it to the guess
+        - If the key is backspace, remove the last letter from the guess
+        - If the key is enter, check if the guess is correct
+    @param event: the pygame event
+    @param screen: the pygame screen
+    @param grid: the wordle grid
+    @param game_screen: the game screen
+    @param guess: the current guess
+    @param font: the font to use
+    @return: True if the game should end, False if the game should continue
+    """
+    #If the user presses a key, check if it is a letter
+    #If it is a letter, add it to the word
+    if event.key == pygame.K_BACKSPACE:
+        #Replace the last letter with _
+        guess.pop()
+        for i in range(len(grid.matrix[1])):
+            grid.matrix[grid.guesses][i] = ("_", False, False)
+        game_screen.draw(grid, guess)
+    elif event.key == pygame.K_RETURN:
+        return handle_guess(screen, guess, grid, game_screen, font)
+    elif event.key == pygame.K_ESCAPE:
+        return True
+    #If the key is a letter, add it to the word
+    elif event.key >= pygame.K_a and event.key <= pygame.K_z:
+        if len(guess) != len(grid.correct_word):
+            guess.append(chr(event.key))
+            #Draw the game screen
+            game_screen.draw(grid, guess)
+    return False
+
+
 def main():
     #Initialize the pygame screen
     pygame.init()
@@ -278,55 +358,7 @@ def main():
             if event.type == pygame.QUIT:
                 game_over = True
             elif event.type == pygame.KEYDOWN:
-                #If the user presses a key, check if it is a letter
-                #If it is a letter, add it to the word
-                if event.key == pygame.K_BACKSPACE:
-                    #Replace the last letter with _
-                    guess.pop()
-                    for i in range(len(grid.matrix[1])):
-                        grid.matrix[grid.guesses][i] = ("_", False, False)
-                    game_screen.draw(grid, guess)
-                elif event.key == pygame.K_RETURN:
-                    print(guess, grid.correct_word)
-                    if len(guess) == len(grid.correct_word):
-                        print("was here")
-                        is_word, correct_guess = grid.enter_guess(guess)
-                        if correct_guess:
-                            game_over = True
-                            break
-                        if not is_word:
-                            guess = []
-                            #Replace the last letter with
-                            for i in range(len(grid.matrix[1])):
-                                grid.matrix[grid.guesses][i] = ("_", False, False)
-                            game_screen.draw(grid, guess)
-                            #Display message that the guess is not a word
-                            screen.blit(font.render("Not a word", True, (255, 0, 0)), (0, 0))
-                            pygame.display.flip()
-                            pygame.time.delay(1000)
-                        else:
-                            #Display message that the guess is not correct
-                            print("Not correct")
-                            screen.blit(font.render("Not correct", True, (255, 0, 0)), (0, 0))
-                            pygame.display.flip()
-                            pygame.time.delay(1000)
-                            guess = []
-                    else:
-                        print("Word must be 5 letters")
-                        screen.blit(font.render("Word must be 5 letters", \
-                            True, (255, 0, 0)), (0, 0))
-                        pygame.display.flip()
-                        pygame.time.delay(1000)
-                        guess = []
-                elif event.key == pygame.K_ESCAPE:
-                    game_over = True
-                #If the key is a letter, add it to the word
-                elif event.key >= pygame.K_a and event.key <= pygame.K_z:
-                    if len(guess) == len(grid.correct_word):
-                        continue
-                    guess.append(chr(event.key))
-                    #Draw the game screen
-                    game_screen.draw(grid, guess)   
+                game_over = handle_keydown(event, screen, grid, game_screen, guess, font)
         #Draw the game screen
         game_screen.draw(grid, guess)
 
